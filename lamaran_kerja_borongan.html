@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamaran Kerja Borongan - PT. Duta Makmur Bersama</title>
+
+    <!-- ============================================================
+         KELOMPOK 1: LIBRARY & STYLE
+         Fungsi: font Inter dan seluruh gaya halaman (mobile-first:
+         dasar tampilan dibuat untuk HP, lalu dilebarkan untuk tablet/desktop
+         lewat @media). Prefix "lk-" = lamaran kerja.
+         ============================================================ -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --lk-primary: #2b6cb0;
+            --lk-primary-dark: #1e4e8c;
+            --lk-bg-soft: #e1ecf5;
+            --lk-border: #d3dfea;
+            --lk-text: #1f2d3d;
+            --lk-muted: #6b7c93;
+            --lk-danger: #d64545;
+            --lk-success: #2f9e44;
+            --lk-radius: 10px;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f4f7fb; color: var(--lk-text);
+            font-size: 15px; line-height: 1.55;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* --- Kerangka halaman --- */
+        .lk-header { background: #fff; border-bottom: 1px solid var(--lk-border); padding: 14px 16px; text-align: center; }
+        .lk-header-title { margin: 0; font-size: 16px; font-weight: 700; }
+        .lk-header-sub { margin: 2px 0 0; font-size: 12.5px; color: var(--lk-muted); }
+        .lk-wrap { max-width: 720px; margin: 0 auto; padding: 16px 12px 40px; }
+
+        /* --- Penunjuk tahap (4 langkah) --- */
+        .lk-steps { display: flex; gap: 6px; margin-bottom: 14px; }
+        .lk-step { flex: 1; text-align: center; font-size: 11.5px; font-weight: 600; color: var(--lk-muted); }
+        .lk-step-bar { height: 5px; border-radius: 4px; background: var(--lk-border); margin-bottom: 5px; }
+        .lk-step.done .lk-step-bar, .lk-step.active .lk-step-bar { background: var(--lk-primary); }
+        .lk-step.active { color: var(--lk-primary-dark); }
+
+        /* --- Kartu --- */
+        .lk-card { background: #fff; border: 1px solid var(--lk-border); border-radius: var(--lk-radius); padding: 18px 16px; margin-bottom: 14px; }
+        .lk-card h2 { margin: 0 0 12px; font-size: 17px; }
+        .lk-card h3 { margin: 0 0 12px; font-size: 14.5px; color: var(--lk-primary-dark); padding-bottom: 8px; border-bottom: 1px solid var(--lk-border); }
+        .lk-panel[hidden] { display: none; }
+
+        .lk-list { margin: 0; padding-left: 20px; }
+        .lk-list li { margin-bottom: 8px; }
+        .lk-ol { margin: 0 0 14px; padding-left: 22px; }
+        .lk-ol li { margin-bottom: 6px; }
+
+        /* --- Pernyataan validasi --- */
+        .lk-agree { display: flex; gap: 10px; align-items: flex-start; background: var(--lk-bg-soft); border-radius: 8px; padding: 12px; cursor: pointer; font-size: 14px; }
+        .lk-agree input { width: 22px; height: 22px; flex-shrink: 0; margin-top: 2px; accent-color: var(--lk-primary); }
+
+        /* --- Form --- */
+        .lk-field { margin-bottom: 14px; }
+        .lk-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        .lk-req { color: var(--lk-danger); }
+        .lk-input, .lk-select, .lk-textarea {
+            width: 100%; border: 1px solid var(--lk-border); border-radius: 8px;
+            padding: 11px 12px; font-size: 16px; /* 16px mencegah zoom otomatis di iPhone */
+            font-family: inherit; color: var(--lk-text); background: #fff; outline: none;
+        }
+        .lk-input:focus, .lk-select:focus, .lk-textarea:focus { border-color: var(--lk-primary); }
+        .lk-input.invalid, .lk-select.invalid, .lk-textarea.invalid { border-color: var(--lk-danger); }
+        .lk-textarea { min-height: 90px; resize: vertical; }
+        .lk-hint { font-size: 12px; color: var(--lk-muted); margin-top: 4px; }
+        .lk-error { font-size: 12.5px; color: var(--lk-danger); margin-top: 4px; min-height: 0; }
+        .lk-mono { letter-spacing: 1px; font-variant-numeric: tabular-nums; }
+
+        .lk-radio-row { display: flex; gap: 12px; }
+        .lk-radio { flex: 1; display: flex; align-items: center; gap: 8px; border: 1px solid var(--lk-border); border-radius: 8px; padding: 11px 12px; cursor: pointer; }
+        .lk-radio input { width: 18px; height: 18px; accent-color: var(--lk-primary); }
+        .lk-radio.disabled { background: #eef2f7; color: var(--lk-muted); cursor: not-allowed; }
+
+        .lk-alert { border-radius: 8px; padding: 11px 12px; font-size: 13.5px; margin-top: 8px; }
+        .lk-alert[hidden] { display: none; }
+        .lk-alert-danger { background: #fdecec; color: #8f2222; border: 1px solid #f3c5c5; }
+        .lk-alert-info { background: #eaf3fb; color: #1e4e8c; border: 1px solid #c8dcf0; }
+
+        /* --- Review --- */
+        .lk-review { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .lk-review td { padding: 8px 4px; border-bottom: 1px solid var(--lk-border); vertical-align: top; }
+        .lk-review td:first-child { width: 42%; color: var(--lk-muted); }
+        .lk-review td:last-child { font-weight: 600; word-break: break-word; }
+
+        /* --- Tombol navigasi --- */
+        .lk-nav { display: flex; gap: 10px; margin-top: 6px; }
+        .lk-btn { flex: 1; border-radius: 8px; padding: 13px 16px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; border: 1px solid var(--lk-primary); }
+        .lk-btn-primary { background: var(--lk-primary); color: #fff; }
+        .lk-btn-primary:hover:not(:disabled) { background: var(--lk-primary-dark); }
+        .lk-btn-plain { background: #fff; color: var(--lk-primary-dark); }
+        .lk-btn:disabled { opacity: .5; cursor: not-allowed; }
+        .lk-btn[hidden] { display: none; }
+
+        .lk-success { text-align: center; padding: 28px 8px; }
+        .lk-success .lk-check { width: 56px; height: 56px; border-radius: 50%; background: #e6f6ea; color: var(--lk-success); font-size: 30px; line-height: 56px; margin: 0 auto 12px; }
+
+        /* --- Tablet & desktop --- */
+        @media (min-width: 640px) {
+            .lk-wrap { padding: 28px 16px 56px; }
+            .lk-card { padding: 24px 28px; }
+            .lk-header-title { font-size: 19px; }
+            .lk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+            .lk-grid .lk-full { grid-column: 1 / -1; }
+            .lk-btn { flex: 0 0 auto; min-width: 150px; }
+            .lk-nav { justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+         KELOMPOK 2: KEPALA HALAMAN
+         ============================================================ -->
+    <header class="lk-header">
+        <h1 class="lk-header-title">PT. Duta Makmur Bersama</h1>
+        <p class="lk-header-sub">Portal Lamaran Kerja Borongan</p>
+    </header>
+
+    <main class="lk-wrap">
+
+        <!-- ========================================================
+             KELOMPOK 3: PENUNJUK TAHAP
+             Fungsi: batang kemajuan 4 tahap, diisi oleh JS.
+             ======================================================== -->
+        <div class="lk-steps" id="lkSteps">
+            <div class="lk-step" data-s="1"><div class="lk-step-bar"></div>Informasi</div>
+            <div class="lk-step" data-s="2"><div class="lk-step-bar"></div>Validasi</div>
+            <div class="lk-step" data-s="3"><div class="lk-step-bar"></div>Data Diri</div>
+            <div class="lk-step" data-s="4"><div class="lk-step-bar"></div>Kirim</div>
+        </div>
+
+        <!-- ========================================================
+             KELOMPOK 4: TAHAP 1 - INFORMASI & DISCLAIMER
+             ======================================================== -->
+        <section class="lk-panel lk-card" id="panel1">
+            <h2>PORTAL LAMARAN KERJA BORONGAN</h2>
+            <ul class="lk-list">
+                <li>Web ini adalah portal untuk melamar pekerjaan sebagai <b>KARYAWAN BORONGAN</b> di PT. Duta Makmur Bersama</li>
+                <li><b>Pekerjaan yang kami sediakan adalah PEKERJAAN BORONGAN dengan sistem Hasil, bukan harian maupun pekerja kontrak bulanan</b></li>
+                <li>Portal lamaran kerja dan Proses rekrutment ini 100% Gratis / Tidak berbayar</li>
+                <li>PT. Duta Makmur Bersama tidak meminta pungutan atau pembayaran dalam bentuk apapun</li>
+                <li>PT. Duta Makmur Bersama tidak bertanggung jawab atas segala bentuk pungutan apapun yang terjadi diluar dari proses rekrutment kami</li>
+                <li>Portal Lamaran kerja ini hanya bersifat administrasi, bukan menjadi acuan bahwa anda pasti akan bekerja diperusahaan kami</li>
+                <li>PT. Duta Makmur Bersama tidak pernah menjanjikan calon karyawan akan dipanggil dalam kurun waktu tertentu</li>
+                <li>Jika ada kebutuhan karyawan, pelamar yang memenuhi persyaratan administrasi awal akan dikonfirmasi oleh pihak Admin PT. Duta Makmur Bersama</li>
+            </ul>
+        </section>
+
+        <!-- ========================================================
+             KELOMPOK 5: TAHAP 2 - VALIDASI (dummy, local storage)
+             Fungsi: daftar syarat + kotak centang pernyataan.
+             Centang HANYA membuka tahap berikutnya, tidak dikirim ke database.
+             ======================================================== -->
+        <section class="lk-panel lk-card" id="panel2" hidden>
+            <h2>SYARAT DAN KETENTUAN PELAMAR KERJA BORONGAN</h2>
+            <ol class="lk-ol">
+                <li>Sehat Jasmani dan Rohani</li>
+                <li>Usia maksimal 40 Tahun</li>
+                <li>Bisa Membaca, Menulis dan Menghitung</li>
+                <li>Tidak Buta Warna</li>
+                <li>Mempunyai motivasi kerja yang tinggi</li>
+                <li>Siap ditempatkan dibagian apapun</li>
+                <li>Tidak pernah atau sedang terlibat tindakan criminal</li>
+                <li>Tidak menggunakan obat - obatan terlarang</li>
+            </ol>
+            <label class="lk-agree">
+                <input type="checkbox" id="chkAgree">
+                <span>Saya telah membaca persyaratan tersebut diatas, dan dengan ini saya menyatakan bahwa saya memenuhi persyaratan tersebut. Jika dikemudian hari ditemukan bahwa pernyataan yang saya buat tidak benar, maka saya siap untuk dikeluarkan tanpa menuntut hak apapun.</span>
+            </label>
+        </section>
+
+        <!-- ========================================================
+             KELOMPOK 6: TAHAP 3 - PENGISIAN DATA
+             I. Data Pelamar, II. Data Pendukung.
+             Kolom bersyarat (deskripsi, referensi, dll) disembunyikan/
+             ditampilkan oleh JS.
+             ======================================================== -->
+        <section class="lk-panel" id="panel3" hidden>
+
+            <div class="lk-card">
+                <h3>I. Data Pelamar</h3>
+                <div class="lk-grid">
+                    <div class="lk-field lk-full">
+                        <label class="lk-label" for="fKtp">No KTP <span class="lk-req">*</span></label>
+                        <input class="lk-input lk-mono" id="fKtp" type="text" inputmode="numeric" autocomplete="off" placeholder="375805 120176 0001" maxlength="18">
+                        <div class="lk-hint">16 digit. Spasi ditambahkan otomatis.</div>
+                        <div class="lk-error" id="eKtp"></div>
+                        <div class="lk-alert lk-alert-danger" id="alertKtp" hidden>Data anda sudah tersimpan di system, tunggu pemanggilan dari admin kami.</div>
+                        <div class="lk-alert lk-alert-danger" id="alertBlacklist" hidden>Anda tidak bisa mengajukan lamaran karena sudah pernah bekerja sebelumnya dan keluar dengan posisi blacklist.</div>
+                        <div class="lk-alert lk-alert-info" id="infoKtpCek" hidden>Memeriksa No KTP...</div>
+                    </div>
+                    <div class="lk-field lk-full">
+                        <label class="lk-label" for="fNama">Nama <span class="lk-req">*</span></label>
+                        <input class="lk-input" id="fNama" type="text" autocomplete="name">
+                        <div class="lk-error" id="eNama"></div>
+                    </div>
+                    <div class="lk-field lk-full">
+                        <label class="lk-label" for="fAlamat">Alamat <span class="lk-req">*</span></label>
+                        <textarea class="lk-textarea" id="fAlamat" autocomplete="street-address"></textarea>
+                        <div class="lk-error" id="eAlamat"></div>
+                    </div>
+                    <div class="lk-field">
+                        <label class="lk-label" for="fJk">Jenis Kelamin <span class="lk-req">*</span></label>
+                        <select class="lk-select" id="fJk">
+                            <option value="">-pilih jenis kelamin-</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                        <div class="lk-error" id="eJk"></div>
+                    </div>
+                    <div class="lk-field">
+                        <label class="lk-label" for="fPendidikan">Pendidikan Terakhir <span class="lk-req">*</span></label>
+                        <select class="lk-select" id="fPendidikan">
+                            <option value="">-pilih pendidikan terakhir-</option>
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMA">SMA</option>
+                            <option value="D3">D3</option>
+                            <option value="S1">S1</option>
+                        </select>
+                        <div class="lk-error" id="ePendidikan"></div>
+                    </div>
+                    <div class="lk-field">
+                        <label class="lk-label" for="fTgl">Tanggal Lahir <span class="lk-req">*</span></label>
+                        <input class="lk-input" id="fTgl" type="date">
+                        <div class="lk-error" id="eTgl"></div>
+                    </div>
+                    <div class="lk-field">
+                        <label class="lk-label" for="fTelp">No Telp <span class="lk-req">*</span></label>
+                        <input class="lk-input lk-mono" id="fTelp" type="text" inputmode="numeric" autocomplete="tel" placeholder="0821 4320 12345" maxlength="16">
+                        <div class="lk-error" id="eTelp"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lk-card">
+                <h3>II. Data Pendukung</h3>
+
+                <div class="lk-field">
+                    <span class="lk-label">Apakah anda pernah bekerja di PT. Duta Makmur Sebelumnya? <span class="lk-req">*</span></span>
+                    <div class="lk-radio-row">
+                        <label class="lk-radio" id="lblPernahYa"><input type="radio" name="pernah" value="ya"> Ya</label>
+                        <label class="lk-radio" id="lblPernahTidak"><input type="radio" name="pernah" value="tidak"> Tidak</label>
+                    </div>
+                    <div class="lk-hint" id="hintPernah" hidden>Data anda ditemukan di arsip karyawan kami, pilihan ini otomatis "Ya".</div>
+                    <div class="lk-error" id="ePernah"></div>
+                </div>
+
+                <div class="lk-field" id="wrapDescPernah" hidden>
+                    <label class="lk-label" for="fDescPernah">Jelaskan kapan terakhir anda bekerja, dibagian apa dan kenapa anda mengundurkan diri <span class="lk-req">*</span></label>
+                    <textarea class="lk-textarea" id="fDescPernah"></textarea>
+                    <div class="lk-error" id="eDescPernah"></div>
+                </div>
+
+                <div class="lk-field">
+                    <label class="lk-label" for="fInfo">Anda mendapat informasi atau Link lamaran ini dari siapa ? <span class="lk-req">*</span></label>
+                    <select class="lk-select" id="fInfo">
+                        <option value="">-pilih sumber informasi-</option>
+                        <option value="Ormas">Ormas</option>
+                        <option value="Media Sosial">Media Sosial</option>
+                        <option value="Kerabat (saudara, teman atau kenalan)">Kerabat (saudara, teman atau kenalan)</option>
+                        <option value="Saya pernah bekerja di DMB, dan sudah punya link dari sebelumnya">Saya pernah bekerja di DMB, dan sudah punya link dari sebelumnya</option>
+                    </select>
+                    <div class="lk-error" id="eInfo"></div>
+                </div>
+
+                <div id="wrapReferensi" hidden>
+                    <div class="lk-field">
+                        <label class="lk-label" for="fReferensi">Siapa yang mereferensikan anda? <span class="lk-req">*</span></label>
+                        <input class="lk-input" id="fReferensi" type="text">
+                        <div class="lk-error" id="eReferensi"></div>
+                    </div>
+                    <div class="lk-field">
+                        <label class="lk-label" for="fDescReferensi">Jelaskan hubungan anda dengan orang yang mereferensikan anda dan sebutkan pekerjaan orang yang mereferensikan anda <span class="lk-req">*</span></label>
+                        <textarea class="lk-textarea" id="fDescReferensi"></textarea>
+                        <div class="lk-error" id="eDescReferensi"></div>
+                    </div>
+                </div>
+
+                <div class="lk-field">
+                    <span class="lk-label">Apakah anda diharuskan memberikan sejumlah uang atau barang? <span class="lk-req">*</span></span>
+                    <div class="lk-radio-row">
+                        <label class="lk-radio"><input type="radio" name="pungli" value="ya"> Ya</label>
+                        <label class="lk-radio"><input type="radio" name="pungli" value="tidak" checked> Tidak</label>
+                    </div>
+                </div>
+
+                <div class="lk-field" id="wrapDescPungli" hidden>
+                    <label class="lk-label" for="fDescPungli">Sebutkan / jelaskan apa yang anda berikan? <span class="lk-req">*</span></label>
+                    <textarea class="lk-textarea" id="fDescPungli"></textarea>
+                    <div class="lk-error" id="eDescPungli"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================
+             KELOMPOK 7: TAHAP 4 - REVIEW & PENGIRIMAN
+             Fungsi: ringkasan semua isian (diisi JS) sebelum dikirim.
+             ======================================================== -->
+        <section class="lk-panel lk-card" id="panel4" hidden>
+            <h2>Periksa Kembali Data Anda</h2>
+            <p class="lk-hint" style="margin-top:-6px;margin-bottom:12px;">Pastikan semua data benar sebelum dikirim.</p>
+            <table class="lk-review"><tbody id="reviewBody"></tbody></table>
+            <div class="lk-alert lk-alert-danger" id="alertSubmit" hidden></div>
+        </section>
+
+        <!-- Layar sukses setelah kirim -->
+        <section class="lk-panel lk-card lk-success" id="panelDone" hidden>
+            <div class="lk-check">&#10003;</div>
+            <h2>Lamaran Terkirim</h2>
+            <p>Terima kasih. Data anda sudah tersimpan. Jika ada kebutuhan karyawan dan anda memenuhi persyaratan administrasi awal, Admin PT. Duta Makmur Bersama akan menghubungi anda.</p>
+        </section>
+
+        <!-- ========================================================
+             KELOMPOK 8: TOMBOL NAVIGASI
+             ======================================================== -->
+        <div class="lk-nav" id="lkNav">
+            <button type="button" class="lk-btn lk-btn-plain" id="btnBack" hidden>Kembali</button>
+            <button type="button" class="lk-btn lk-btn-primary" id="btnNext">Lanjut</button>
+        </div>
+    </main>
+
+    <!-- ============================================================
+         KELOMPOK 9: SCRIPT
+         PERLU DICEK: path lamaran_kerja_borongan.js, samakan dengan lokasi file Anda.
+         Klien Supabase dibuat langsung di dalam skrip halaman ini (tanpa supabase.js).
+         ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/lamaran_kerja_borongan.js"></script>
+</body>
+</html>
